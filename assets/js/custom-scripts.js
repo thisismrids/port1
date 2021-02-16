@@ -1,14 +1,14 @@
 (function($) {
   "use strict";
-  
+
     $.fn.andSelf = function() {
       return this.addBack.apply(this, arguments);
     }
-  
+
       /* Loader Code Start */
-      $(window).on("load", function() { 
+      $(window).on("load", function() {
           $(".section-loader").fadeOut("slow");
-          
+
           var $container = $('.portfolioContainer');
           $container.isotope({
               filter: '*',
@@ -16,11 +16,11 @@
                   queue: true
               }
           });
-       
+
           $('.portfolio-nav li').click(function(){
               $('.portfolio-nav .current').removeClass('current');
               $(this).addClass('current');
-       
+
               var selector = $(this).attr('data-filter');
               $container.isotope({
                   filter: selector,
@@ -32,19 +32,19 @@
           });
         });
       /* Loader Code End */
-  
-   
+
+
     /*
     |====================
     | Mobile NAv trigger
     |=====================
     */
-    
+
     var trigger = $('.navbar-toggler'),
       overlay     = $('.overlay'),
       navc     = $('.navbar-collapse'),
       active      = false;
-  
+
 
       $('.navbar-toggler, .navbar-nav li a, .overlay').on('click', function () {
           $('.navbar-toggler').toggleClass('active')
@@ -52,31 +52,31 @@
         //   $('.navbar-collapse').toggleClass('show');
           overlay.toggleClass('active');
           navc.toggleClass('active');
-      });  
-      
-        
+      });
+
+
     /*
     |=================
     | Onepage Nav
     |================
     */
-        
+
       $('#mh-header').onePageNav({
-          currentClass: 'active', 
+          currentClass: 'active',
           changeHash: false,
           scrollSpeed: 750,
           scrollThreshold: 0.5,
       });
-    
+
     /*
     |=================
     | fancybox
     |================
     */
- 
+
       $("[data-fancybox]").fancybox({});
-      
-      
+
+
     /*
     |===============
     | WOW ANIMATION
@@ -86,16 +86,16 @@
           mobile: false  // trigger animations on mobile devices (default is true)
       });
       wow.init();
-      
-      
+
+
     /*
     |=================
     | AOS
     |================
-    */      
-      
+    */
+
       //AOS.init();
-  
+
     /*
     | ==========================
     | NAV FIXED ON SCROLL
@@ -109,32 +109,32 @@
             $(".nav-scroll").removeClass("nav-strict");
         }
     });
-    
+
 
     /*
     |=================
     | Progress bar
     |================
-    */   
+    */
     $(".determinate").each(function(){
       var width = $(this).text();
       $(this).css("width", width)
         .empty()
-        .append('<i class="fa fa-circle"></i>');                
+        .append('<i class="fa fa-circle"></i>');
     });
-    
+
     /*
     |=================
     | Portfolio mixin
     |================
-    */   
+    */
     $('#portfolio-item').mixItUp();
-    
+
     /*
     |=================
     | Client review
     |================
-    */   
+    */
      $('#mh-client-review').owlCarousel({
         loop: false,
         responsiveClass: true,
@@ -156,13 +156,13 @@
             items: 3,
           }
         }
-    });  
-    
+    });
+
     /*
     |=================
     | Project review slide
     |================
-    */   
+    */
     $('.mh-project-testimonial').owlCarousel({
         loop: true,
         responsiveClass: true,
@@ -186,13 +186,13 @@
             items: 1,
           }
         }
-    });     
-    
+    });
+
     /*
     |=================
     | Single Project review
     |================
-    */   
+    */
     $('#single-project').owlCarousel({
         loop: false,
         responsiveClass: true,
@@ -216,13 +216,13 @@
             items: 1,
           }
         }
-    });    
-    
+    });
+
     /*
     |=================
     | Project review slide
     |================
-    */   
+    */
     $('.mh-single-project-slide-by-side').owlCarousel({
         loop: false,
         responsiveClass: true,
@@ -247,13 +247,13 @@
             items: 1,
           }
         }
-    });     
-    
+    });
+
     /*
     |=================
     | Single client review
     |================
-    */   
+    */
     $('#mh-single-client-review').owlCarousel({
         loop: false,
         responsiveClass: true,
@@ -275,13 +275,13 @@
             items: 1,
           }
         }
-    });   
-    
+    });
+
     /*
     |=================
     | Clint review slide
     |================
-    */   
+    */
     $('#mh-2-client-review').owlCarousel({
         loop: false,
         responsiveClass: true,
@@ -304,8 +304,8 @@
           }
         }
     });
-    
-    
+
+
     // Smooth Scroll
         // $(function() {
         //   $('a[href*=#]:not([href=#])').click(function() {
@@ -321,63 +321,103 @@
         //     }
         //   });
         // });
-        
-        
-        
+
+
+
     /*
     |=================
     | CONTACT FORM
     |=================
     */
-        
-      $("#contactForm").validator().on("submit", function (event) {
-          if (event.isDefaultPrevented()) {
-            // handle the invalid form...
-            formError();
-            submitMSG(false, "Did you fill in the form properly?");
-          } else {
-            // everything looks good!
-            event.preventDefault();
-            submitForm();
-          }
-       });
-    
-        function submitForm(){
-          var name = $("#name").val();
-          var email = $("#email").val();
-          var message = $("#message").val();
-          $.ajax({
-              type: "POST",
-              url: "process.php",
-              data: "name=" + name + "&email=" + email + "&message=" + message,
-              success : function(text){
-                  if (text == "success"){
-                      formSuccess();
-                    } else {
-                      formError();
-                      submitMSG(false,text);
-                    }
-                }
+    $(function () {
+    $(
+        "#contactForm input,#contactForm textarea,#contactForm button"
+    ).jqBootstrapValidation({
+        preventSubmit: true,
+        submitError: function ($form, event, errors) {
+            // additional error messages or events
+        },
+        submitSuccess: function ($form, event) {
+            event.preventDefault(); // prevent default submit behaviour
+            // get values from FORM
+            var name = $("input#name").val();
+            var email = $("input#email").val();
+            var message = $("textarea#message").val();
+            var firstName = name; // For Success/Failure Message
+            // Check for white space in name for Success/Fail message
+            if (firstName.indexOf(" ") >= 0) {
+                firstName = name.split(" ").slice(0, -1).join(" ");
+            }
+            $this = $("#sendMessageButton");
+            $this.prop("disabled", true); // Disable submit button until AJAX call is complete to prevent duplicate messages
+            $.ajax({
+                url: "/assets/mail/mail.php",
+                type: "POST",
+                data: {
+                    name: name,
+                    email: email,
+                    message: message,
+                },
+                cache: false,
+                success: function () {
+                    // Success message
+                    $("#success").html("<div class='alert alert-success'>");
+                    $("#success > .alert-success")
+                        .html(
+                            "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;"
+                        )
+                        .append("</button>");
+                    $("#success > .alert-success").append(
+                        "<strong>Your message has been sent. </strong>"
+                    );
+                    $("#success > .alert-success").append("</div>");
+                    //clear all fields
+                    $("#contactForm").trigger("reset");
+                },
+                error: function () {
+                    // Fail message
+                    $("#success").html("<div class='alert alert-danger'>");
+                    $("#success > .alert-danger")
+                        .html(
+                            "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;"
+                        )
+                        .append("</button>");
+                    $("#success > .alert-danger").append(
+                        $("<strong>").text(
+                            "Sorry " +
+                                firstName +
+                                ", it seems that my mail server is not responding. Please try again later!"
+                        )
+                    );
+                    $("#success > .alert-danger").append("</div>");
+                    //clear all fields
+                    $("#contactForm").trigger("reset");
+                },
+                complete: function () {
+                    setTimeout(function () {
+                        $this.prop("disabled", false); // Re-enable submit button when AJAX call is complete
+                    }, 1000);
+                },
             });
-        }
-        function formSuccess(){
-            $("#contactForm")[0].reset();
-            submitMSG(true, "Message Sent!")
-        }
-    	  function formError(){   
-    	    $("#contactForm").removeClass().addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-    	        $(this).removeClass();
-    	    });
-    	  }
-        function submitMSG(valid, msg){
-          if(valid){
-            var msgClasses = "h3 text-center fadeInUp animated text-success";
-          } else {
-            var msgClasses = "h3 text-center shake animated text-danger";
-          }
-          $("#msgSubmit").removeClass().addClass(msgClasses).text(msg);
-        }
-    
+        },
+        filter: function () {
+            return $(this).is(":visible");
+        },
+    });
 
-    
+    $('a[data-toggle="tab"]').click(function (e) {
+        e.preventDefault();
+        $(this).tab("show");
+    });
+});
+
+/*When clicking on Full hide fail/success boxes */
+$("#name").focus(function () {
+    $("#success").html("");
+});
+
+
+
+
+
 }(jQuery));
